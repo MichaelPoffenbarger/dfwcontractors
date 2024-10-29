@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DFW Contractors Blog</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        @media (min-width: 768px) {
+            .sidebar {
+                position: sticky;
+                top: 0;
+                height: 100vh;
+            }
+        }
+        .article-preview {
+            margin-bottom: 2rem;
+        }
+        #sidebar-toggle {
+            position: fixed;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+        }
+        @media (min-width: 768px) {
+            #sidebar-toggle {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar Toggle Button -->
+            <button id="sidebar-toggle" class="btn btn-primary d-md-none">
+                <i class="bi bi-list"></i>
+            </button>
+
+            <!-- Sidebar -->
+            <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <h3 class="mt-3 mb-3">Categories</h3>
+                    <div class="list-group">
+                        <a href="#" class="list-group-item list-group-item-action active" data-category="all">All Categories</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="construction">Construction</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="masonry">Masonry</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="electrical">Electrical</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="plumbing">Plumbing</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="carpentry">Carpentry</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="roofing">Roofers</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="drywall">Drywall</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="painting">Painters</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="pool">Pool Cleaning</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="landscaping">Landscaping</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="cleaning">Home Cleaning</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="hvac">HVAC</a>
+                        <a href="#" class="list-group-item list-group-item-action" data-category="flooring">Flooring</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">DFW Contractors Blog</h1>
+                </div>
+                <div id="articles-container">
+                    <!-- Articles will be dynamically inserted here -->
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Sample article data
+        const articles = [
+            {
+                title: "Top 10 Construction Companies in Dallas",
+                category: "construction",
+                preview: "Discover the leading construction firms shaping the Dallas skyline...",
+                date: "2023-04-15"
+            },
+            {
+                title: "The Art of Masonry: DFW's Finest Craftsmen",
+                category: "masonry",
+                preview: "Explore the intricate work of master masons in the Metroplex...",
+                date: "2023-04-12"
+            },
+            {
+                title: "Electrical Innovations in Fort Worth",
+                category: "electrical",
+                preview: "Learn about the latest electrical technologies being implemented...",
+                date: "2023-04-10"
+            },
+            {
+                title: "Plumbing Experts: Keeping DFW's Water Flowing",
+                category: "plumbing",
+                preview: "Meet the plumbers who ensure smooth operations in homes and businesses...",
+                date: "2023-04-08"
+            },
+            {
+                title: "Carpentry Showcase: Custom Woodwork in Dallas Homes",
+                category: "carpentry",
+                preview: "Admire the craftsmanship of local carpenters and their stunning projects...",
+                date: "2023-04-05"
+            }
+        ];
+
+        // Function to display articles
+        function displayArticles(category = 'all') {
+            const container = $('#articles-container');
+            container.empty();
+
+            const filteredArticles = category === 'all' 
+                ? articles 
+                : articles.filter(article => article.category === category);
+
+            filteredArticles.forEach(article => {
+                container.append(`
+                    <div class="article-preview">
+                        <h2>${article.title}</h2>
+                        <p class="text-muted">${article.date} | Category: ${article.category}</p>
+                        <p>${article.preview}</p>
+                        <a href="#" class="btn btn-primary">Read More</a>
+                    </div>
+                    <hr>
+                `);
+            });
+        }
+
+        // Initial display of all articles
+        displayArticles();
+
+        // Event listener for category selection
+        $('.list-group-item').on('click', function(e) {
+            e.preventDefault();
+            $('.list-group-item').removeClass('active');
+            $(this).addClass('active');
+            const category = $(this).data('category');
+            displayArticles(category);
+            
+            // Close sidebar on mobile after category selection
+            if (window.innerWidth < 768) {
+                $('#sidebar').collapse('hide');
+            }
+        });
+
+        // Sidebar toggle functionality
+        $('#sidebar-toggle').on('click', function() {
+            $('#sidebar').collapse('toggle');
+        });
+    </script>
+</body>
+</html>
